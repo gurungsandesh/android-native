@@ -1,12 +1,11 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StyleSheet } from 'react-native';
-import { LoginScreen } from './screen/login';
-import { userScreen } from './screen/userScreen';
-import { Demo1 } from './screen/test';
 import { PaperProvider } from 'react-native-paper';
 import { ToastProvider } from 'react-native-toast-notifications';
 import { AdminDashboard } from './screen/adminDashboard';
+import { LoginScreen } from './screen/login';
+import { UserScreen } from './screen/userScreen';
 
 
 
@@ -28,7 +27,11 @@ export default function App() {
               component={AdminDashboard}
               options={{ title: 'Dashboard' }}
             />
-            {/* <Stack.Screen name="Profile" component={ProfileScreen} /> */}
+            <Stack.Screen
+              name="userDashboard"
+              component={UserScreen}
+            />
+
           </Stack.Navigator>
         </NavigationContainer>
       </ToastProvider>

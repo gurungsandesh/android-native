@@ -17,14 +17,19 @@ export const LoginScreen = ({ navigation }) => {
         }
 
         const test = await loginPost(username, password);
-        navigation.navigate('adminDashboard')
-        // if (test) {
-        //     if (test.message == "User found") {
-        //         toast.show("Welcome")
-        //     } else {
-        //         toast.show("User not found")
-        //     }
-        // }
+        if (test) {
+            if (test.message == "User found") {
+                if (test.data.username == "admin") {
+                    toast.show(`Welcome ${test.data.username}`)
+                    navigation.navigate('adminDashboard')
+                } else {
+                    toast.show(`Welcome ${test.data.username}`)
+                    navigation.navigate('userDashboard')
+                }
+            } else {
+                toast.show("User not found")
+            }
+        }
 
     }
 

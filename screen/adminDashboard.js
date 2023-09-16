@@ -1,42 +1,52 @@
-import React from 'react';
-import { View } from 'react-native';
-import { BottomNavigation, Text } from 'react-native-paper';
-
-const MusicRoute = () => <Text>Music</Text>;
-
-const AlbumsRoute = () => <Text>Albums</Text>;
-
-const RecentsRoute = () => <Text>Recents</Text>;
-
-const NotificationsRoute = () => <Text>Notifications</Text>;
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { DataTable, Text } from 'react-native-paper';
+import { getAll } from '../services/allService';
 
 export const AdminDashboard = ({ navigation }) => {
 
-    const [index, setIndex] = React.useState(0);
-    const [routes] = React.useState([
-        { key: 'music', title: 'Favorites', focusedIcon: 'heart', unfocusedIcon: 'heart-outline' },
-        { key: 'albums', title: 'Albums', focusedIcon: 'album' },
-        { key: 'recents', title: 'Recents', focusedIcon: 'history' },
-        { key: 'notifications', title: 'Notifications', focusedIcon: 'bell', unfocusedIcon: 'bell-outline' },
-    ]);
+    const [data, setData] = useState([]);
 
-    const renderScene = BottomNavigation.SceneMap({
-        music: MusicRoute,
-        albums: AlbumsRoute,
-        recents: RecentsRoute,
-        notifications: NotificationsRoute,
-    });
+    useEffect(() => {
+        getAllData()
+    }, []);
+
+    const getAllData = async () => {
+        const data = await getAll();
+
+        if (data) {
+            setData(data)
+        }
+    }
 
     return (
-        <View>
+        <View style={styles.dataContainer} >
             <Text>
-                Notifications
+                DataTable
             </Text>
-            <BottomNavigation
-                navigationState={{ index, routes }}
-                onIndexChange={setIndex}
-                renderScene={renderScene}
-            />
+
+            <DataTable>
+                <DataTable.Header>
+                    <DataTable.Title>Account</DataTable.Title>
+                    <DataTable.Title numeric>Values</DataTable.Title>
+                </DataTable.Header>
+
+                {data.length > 0 && data.map((item) => (
+                    <DataTable.Row key={item.id}>
+                        <DataTable.Cell>{item.name}</DataTable.Cell>
+                        <DataTable.Cell numeric>{item.value}</DataTable.Cell>
+                    </DataTable.Row>
+                ))}
+
+            </DataTable>
+
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    dataContainer: {
+        margin: 10,
+        padding: 10
+    },
+});

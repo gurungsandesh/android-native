@@ -1,38 +1,100 @@
+import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
+import { Button, Text, TextInput } from "react-native-paper";
 import SelectDropdown from 'react-native-select-dropdown';
+import { useToast } from "react-native-toast-notifications";
+import { getAll, postData } from "../services/allService";
 
 const countries = ["Egypt", "Canada", "Australia", "Ireland"]
 
-export const userScreen = ({ navigation, route }) => {
+export const UserScreen = ({ navigation, route }) => {
+
+    const [value, setValue] = useState();
+    const [accountName, setAccountName] = useState();
+    const [data, setData] = useState([]);
+    const toast = useToast();
+
+
+    useEffect(() => {
+        getAllData()
+    }, []);
+
+    const getAllData = async () => {
+        const data = await getAll();
+
+        if (data) {
+            let allCompany = data.map(val => val.name)
+            setData(allCompany)
+        }
+    }
+
+    const onClickSend = async (accountName, value) => {
+        console.log("data is ", accountName, value);
+
+        if (!accountName || !value) {
+            toast.show("Please insert all the info")
+        }
+
+        const test = await postData(accountName, value);
+        if (test) {
+            if (test.message == "added") {
+                toast.show("Vlaue added")
+            } else {
+                toast.show("Sorry cant process the transaction")
+            }
+        }
+
+    }
 
     return (
-        <View>
+        <View style={styles.container}>
+            <Text>
+                Please select account
+            </Text>
+
             <SelectDropdown
-                data={countries}
+                styles={styles.select}
+                data={data}
                 onSelect={(selectedItem, index) => {
-                    console.log(selectedItem, index)
+                    setAccountName(selectedItem)
                 }}
                 buttonTextAfterSelection={(selectedItem, index) => {
-                    // text represented after item is selected
-                    // if data array is an array of objects then return selectedItem.property to render after item is selected
                     return selectedItem
                 }}
                 rowTextForSelection={(item, index) => {
-                    // text represented for each item in dropdown
-                    // if data array is an array of objects then return item.property to represent item in dropdown
                     return item
                 }}
             />
+
+            <Text>
+            </Text>
+
+
+            <TextInput
+                label="Value"
+                value={value}
+                style={styles.input}
+                keyboardType='numeric'
+                onChangeText={text => setValue(text)}
+            />
+
+            <Button mode="contained" onPress={() => onClickSend(accountName, value)}>
+                Send
+            </Button>
         </View>
     );
 };
 
 
 const styles = StyleSheet.create({
-    input: {
-        height: 40,
-        margin: 12,
-        borderWidth: 1,
-        padding: 10,
+    container: {
+        margin: 50,
     },
+    input: {
+        marginBottom: 10,
+        fontSize: 30,
+    },
+    select: {
+        marginBottom: 100,
+    }
 });
