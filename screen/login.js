@@ -18,7 +18,7 @@ export const LoginScreen = ({ navigation }) => {
             return toast.show("Please insert all the info")
         }
         setLoading(true)
-        const test = await loginPost(username, password); s
+        const test = await loginPost(username, password);
         if (test) {
             setLoading(false)
             if (test.message == "User found") {
