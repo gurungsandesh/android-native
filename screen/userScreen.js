@@ -5,7 +5,6 @@ import SelectDropdown from 'react-native-select-dropdown';
 import { useToast } from "react-native-toast-notifications";
 import { getAll, postData } from "../services/allService";
 
-const countries = ["Egypt", "Canada", "Australia", "Ireland"]
 
 export const UserScreen = ({ navigation, route }) => {
 
@@ -14,6 +13,7 @@ export const UserScreen = ({ navigation, route }) => {
     const [data, setData] = useState([]);
     const toast = useToast();
 
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         getAllData()
@@ -29,14 +29,15 @@ export const UserScreen = ({ navigation, route }) => {
     }
 
     const onClickSend = async (accountName, value) => {
-        console.log("data is ", accountName, value);
 
         if (!accountName || !value) {
-            toast.show("Please insert all the info")
+            return toast.show("Please insert all the info")
         }
+        setLoading(true)
 
         const test = await postData(accountName, value);
         if (test) {
+            setLoading(false)
             if (test.message == "added") {
                 toast.show("Vlaue added")
             } else {
@@ -48,7 +49,7 @@ export const UserScreen = ({ navigation, route }) => {
 
     return (
         <View style={styles.container}>
-            <Text>
+            <Text style={styles.black} >
                 Please select account
             </Text>
 
@@ -78,7 +79,7 @@ export const UserScreen = ({ navigation, route }) => {
                 onChangeText={text => setValue(text)}
             />
 
-            <Button mode="contained" onPress={() => onClickSend(accountName, value)}>
+            <Button mode="contained" onPress={() => onClickSend(accountName, value)} loading={loading}>
                 Send
             </Button>
         </View>
@@ -96,5 +97,8 @@ const styles = StyleSheet.create({
     },
     select: {
         marginBottom: 100,
+    },
+    black: {
+        color: '#000000'
     }
 });

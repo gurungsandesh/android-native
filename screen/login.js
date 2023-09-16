@@ -9,15 +9,18 @@ export const LoginScreen = ({ navigation }) => {
     const [userName, setUserName] = useState();
     const [password, setPassword] = useState();
 
+    const [loading, setLoading] = useState(false);
+
     const toast = useToast();
 
     const onClickLogin = async (username, password) => {
         if (!username || !password) {
-            toast.show("Please insert all the info")
+            return toast.show("Please insert all the info")
         }
-
-        const test = await loginPost(username, password);
+        setLoading(true)
+        const test = await loginPost(username, password); s
         if (test) {
+            setLoading(false)
             if (test.message == "User found") {
                 if (test.data.username == "admin") {
                     toast.show(`Welcome ${test.data.username}`)
@@ -48,7 +51,7 @@ export const LoginScreen = ({ navigation }) => {
                 secureTextEntry
                 onChangeText={text => setPassword(text)}
             />
-            <Button mode="contained" onPress={() => onClickLogin(userName, password)}>
+            <Button mode="contained" onPress={() => onClickLogin(userName, password)} loading={loading}>
                 Login
             </Button>
         </View>

@@ -21,23 +21,38 @@ export const AdminDashboard = ({ navigation }) => {
 
     return (
         <View style={styles.dataContainer} >
-            <Text>
+            <Text style={styles.black} >
                 DataTable
             </Text>
 
-            <DataTable>
+            <DataTable style={styles.black} >
                 <DataTable.Header>
-                    <DataTable.Title>Account</DataTable.Title>
-                    <DataTable.Title numeric>Values</DataTable.Title>
+                    <DataTable.Title>
+                        <Text style={styles.black} >
+                            Account
+                        </Text>
+                    </DataTable.Title>
+                    <DataTable.Title numeric>
+                        <Text style={styles.black} >
+                            Values
+                        </Text>
+                    </DataTable.Title>
                 </DataTable.Header>
 
                 {data.length > 0 && data.map((item) => (
                     <DataTable.Row key={item.id}>
-                        <DataTable.Cell>{item.name}</DataTable.Cell>
-                        <DataTable.Cell numeric>{item.value}</DataTable.Cell>
+                        <DataTable.Cell>
+                            <Text style={styles.black} >
+                                {item.name}
+                            </Text>
+                        </DataTable.Cell>
+                        <DataTable.Cell numeric>
+                            <Text style={styles.black} >
+                                {item.value}
+                            </Text>
+                        </DataTable.Cell>
                     </DataTable.Row>
                 ))}
-
             </DataTable>
 
         </View>
@@ -49,4 +64,7 @@ const styles = StyleSheet.create({
         margin: 10,
         padding: 10
     },
+    black: {
+        color: '#000000'
+    }
 });
